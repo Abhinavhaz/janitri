@@ -28,15 +28,20 @@ import {
   ListItemText,
   Divider,
 } from "@mui/material";
+
 import { Add, Edit, Delete, Visibility, AttachFile } from "@mui/icons-material";
 import { useSelector, useDispatch } from "react-redux";
 import { addServiceVisit, updateServiceVisit, deleteServiceVisit } from "../store/slices/serviceSlice";
 import Layout from "../components/Layout/Layout";
+import {useMediaQuery,useTheme} from "@mui/material";
 
 export default function ServicesPage() {
   const dispatch = useDispatch();
+  const theme = useTheme();
+
   const services = useSelector((state) => state.services.visits);
   const devices = useSelector((state) => state.devices.devices);
+const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [viewDialogOpen, setViewDialogOpen] = useState(false);
@@ -124,60 +129,165 @@ export default function ServicesPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h4">Service Visit Logs</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleAddService}>
-            Log Service Visit
-          </Button>
-        </Box>
+      <Container  sx={{
+    marginTop: {
+      xs: "-50px",   // for mobile screens
+      sm: "-10px",   // for tablets
+      md: "-50px",  // for desktop and up
+    }
+    ,
+    width: "100vw",
+    minHeight: "100vh",
+    overflowY: "auto",
+  }}>
+        <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 3,
+    flexDirection: { xs: "column", sm: "row" },
+    gap: 2,
+  }}
+>
+  <Typography
+    sx={{
+      fontSize: {
+        xs: "1.2rem",
+        sm: "1.5rem",
+        md: "1.8rem",
+        lg: "2rem",
+      },
+      fontWeight: 600,
+      textAlign: { xs: "center", sm: "left" },
+    }}
+  >
+    Service Visit Logs
+  </Typography>
 
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Visit ID</TableCell>
-                <TableCell>Device</TableCell>
-                <TableCell>Facility</TableCell>
-                <TableCell>Date</TableCell>
-                <TableCell>Engineer</TableCell>
-                <TableCell>Purpose</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Time Spent</TableCell>
-                <TableCell>Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {services.map((service) => (
-                <TableRow key={service.id}>
-                  <TableCell>{service.id}</TableCell>
-                  <TableCell>{service.deviceType}</TableCell>
-                  <TableCell>{service.facilityName}</TableCell>
-                  <TableCell>{new Date(service.visitDate).toLocaleDateString()}</TableCell>
-                  <TableCell>{service.engineer}</TableCell>
-                  <TableCell>
-                    <Chip label={service.purpose} color={getPurposeColor(service.purpose)} size="small" />
-                  </TableCell>
-                  <TableCell>
-                    <Chip label={service.status} color={getStatusColor(service.status)} size="small" />
-                  </TableCell>
-                  <TableCell>{service.timeSpent}h</TableCell>
-                  <TableCell>
-                    <IconButton onClick={() => handleViewService(service)} size="small">
-                      <Visibility />
-                    </IconButton>
-                    <IconButton onClick={() => handleEditService(service)} size="small">
-                      <Edit />
-                    </IconButton>
-                    <IconButton onClick={() => handleDeleteService(service.id)} size="small">
-                      <Delete />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+  <Button
+    variant="contained"
+    startIcon={<Add />}
+    onClick={handleAddService}
+    sx={{
+      fontSize: {
+        xs: "0.7rem",
+        sm: "0.8rem",
+        md: "0.9rem",
+        lg: "1rem",
+      },
+      py: {
+        xs: 1,
+        sm: 1.2,
+        md: 1.3,
+      },
+      px: {
+        xs: 2,
+        sm: 3,
+      },
+    }}
+  >
+    Log Service Visit
+  </Button>
+</Box>
+
+
+{isMobile ? (
+  // Mobile: Card View
+  <Box>
+    {services.map((service) => (
+      <Paper
+        key={service.id}
+        elevation={3}
+        sx={{
+          mb: 2,
+          p: 2,
+          backgroundColor: "#fff",
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          textAlign:"left"
+        }}
+      >
+        <Typography><strong>Visit ID:</strong> {service.id}</Typography>
+        <Typography><strong>Device:</strong> {service.deviceType}</Typography>
+        <Typography><strong>Facility:</strong> {service.facilityName}</Typography>
+        <Typography><strong>Date:</strong> {new Date(service.visitDate).toLocaleDateString()}</Typography>
+        <Typography><strong>Engineer:</strong> {service.engineer}</Typography>
+        <Typography>
+          <strong>Purpose:</strong>{" "}
+          <Chip label={service.purpose} color={getPurposeColor(service.purpose)} size="small" />
+        </Typography>
+        <Typography>
+          <strong>Status:</strong>{" "}
+          <Chip label={service.status} color={getStatusColor(service.status)} size="small" />
+        </Typography>
+        <Typography><strong>Time Spent:</strong> {service.timeSpent}h</Typography>
+        <Box sx={{ display: "flex",justifyContent:"space-around", gap: 1, mt: 1 }}>
+          <IconButton onClick={() => handleViewService(service)} size="small">
+            <Visibility />
+          </IconButton>
+          <IconButton onClick={() => handleEditService(service)} size="small">
+            <Edit />
+          </IconButton>
+          <IconButton onClick={() => handleDeleteService(service.id)} size="small">
+            <Delete />
+          </IconButton>
+        </Box>
+      </Paper>
+    ))}
+  </Box>
+) : (
+  // Desktop: Table View
+  <TableContainer component={Paper} sx={{  mt: 2 }}>
+    <Table sx={{ minWidth: 800 }}>
+      <TableHead sx={{ backgroundColor: "#f5f5f5" }}>
+        <TableRow>
+          <TableCell>Visit ID</TableCell>
+          <TableCell>Device</TableCell>
+          <TableCell>Facility</TableCell>
+          <TableCell>Date</TableCell>
+          <TableCell>Engineer</TableCell>
+          <TableCell>Purpose</TableCell>
+          <TableCell>Status</TableCell>
+          <TableCell>Time Spent</TableCell>
+          <TableCell>Actions</TableCell>
+        </TableRow>
+      </TableHead>
+      <TableBody>
+        {services.map((service) => (
+          <TableRow key={service.id}>
+            <TableCell>{service.id}</TableCell>
+            <TableCell>{service.deviceType}</TableCell>
+            <TableCell>{service.facilityName}</TableCell>
+            <TableCell>{new Date(service.visitDate).toLocaleDateString()}</TableCell>
+            <TableCell>{service.engineer}</TableCell>
+            <TableCell>
+              <Chip label={service.purpose} color={getPurposeColor(service.purpose)} size="small" />
+            </TableCell>
+            <TableCell>
+              <Chip label={service.status} color={getStatusColor(service.status)} size="small" />
+            </TableCell>
+            <TableCell>{service.timeSpent}h</TableCell>
+            <TableCell>
+              <IconButton onClick={() => handleViewService(service)} size="small">
+                <Visibility />
+              </IconButton>
+              <IconButton onClick={() => handleEditService(service)} size="small">
+                <Edit />
+              </IconButton>
+              <IconButton onClick={() => handleDeleteService(service.id)} size="small">
+                <Delete />
+              </IconButton>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
+  </TableContainer>
+)}
+
+
 
         {/* Add/Edit Service Dialog */}
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>

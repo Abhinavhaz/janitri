@@ -66,3 +66,22 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+.light-theme {
+  --bg-color: #fff;
+  --text-color: #222;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+.dark-theme {
+  --bg-color: #222;
+  --text-color: #fff;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+body, #root, .light-theme, .dark-theme {
+  background: var(--bg-color);
+  color: var(--text-color);
+}

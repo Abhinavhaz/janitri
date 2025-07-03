@@ -8,10 +8,34 @@ import QuickStats from "../components/Dashboard/QuickStats";
 export default function Home() {
   return (
     <Layout>
-      <Container maxWidth="xl" sx={{ mt: 4, mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
-          Medical Device Management Dashboard
-        </Typography>
+      <Container maxWidth="xl" sx={{
+    marginTop: {
+      xs: "-50px",   // for mobile screens
+      sm: "-10px",   // for tablets
+      md: "-50px",  // for desktop and up
+    }
+    ,
+    // width: "100vw",
+    minHeight: "100vh",
+    overflowY: "auto",
+  }}>
+        <Typography
+  variant="h4"
+  gutterBottom
+  sx={{
+    fontSize: {
+      xs: "1.2rem", // mobile
+      sm: "1.5rem", // tablet
+      md: "2rem",   // small desktop
+      lg: "2.4rem", // large screen
+    },
+    fontWeight: 600,
+    textAlign: { xs: "center", sm: "left" }, // optional
+  }}
+>
+  Medical Device Management Dashboard
+</Typography>
+
 
         <Grid container spacing={3}>
           {/* Quick Stats */}

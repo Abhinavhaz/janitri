@@ -139,7 +139,7 @@ export default function DevicesPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
+      <Container maxWidth="xl" sx={{ marginTop: "-180px"}}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography variant="h4">Device Inventory</Typography>
           <Box sx={{ display: "flex", gap: 2 }}>

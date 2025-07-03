@@ -162,13 +162,65 @@ export default function AlertsPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h4">Alerts & Photo Logs</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleAddAlert}>
-            Create Alert
-          </Button>
-        </Box>
+      <Container sx={{
+    marginTop: {
+      xs: "-50px",   // for mobile screens
+      sm: "-50px",   // for tablets
+      md: "-200px",  // for desktop and up
+    },
+    width: "100vw",
+  }}>
+        <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 3,
+    flexDirection: { xs: "column", sm: "row" }, // stack on mobile
+    gap: 2,
+  }}
+>
+  <Typography
+    sx={{
+      fontSize: {
+        xs: "1.2rem", // small screens
+        sm: "1.5rem", // small-medium
+        md: "1.8rem", // medium
+        lg: "2rem",   // large
+      },
+      fontWeight: 600,
+      textAlign: { xs: "center", sm: "left" },
+    }}
+  >
+    Alerts & Photo Logs
+  </Typography>
+
+  <Button
+    variant="contained"
+    startIcon={<Add />}
+    onClick={handleAddAlert}
+    sx={{
+      fontSize: {
+        xs: "0.7rem",
+        sm: "0.8rem",
+        md: "0.9rem",
+        lg: "1rem",
+      },
+      py: {
+        xs: 1,
+        sm: 1.2,
+        md: 1.3,
+      },
+      px: {
+        xs: 2,
+        sm: 3,
+      },
+    }}
+  >
+    Create Alert
+  </Button>
+</Box>
+
 
         <Paper sx={{ mb: 3 }}>
           <Tabs value={tabValue} onChange={(e, newValue) => setTabValue(newValue)}>

@@ -74,10 +74,52 @@ export default function FacilitiesPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h4">Facility Management</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleAddFacility}>
+      <Container  sx={{
+    marginTop: {
+      xs: "-50px",   // for mobile screens
+      sm: "-10px",   // for tablets
+      md: "-50px",  // for desktop and up
+    }
+    ,
+    width: "100vw",
+    minHeight: "100vh",
+    overflowY: "auto",
+  }}>
+        <Box  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 3,
+    flexDirection: { xs: "column", sm: "row" },
+    gap: 2,
+  }}>
+          <Typography sx={{
+      fontSize: {
+        xs: "1.2rem",
+        sm: "1.5rem",
+        md: "1.8rem",
+        lg: "2rem",
+      },
+      fontWeight: 600,
+      textAlign: { xs: "center", sm: "left" },
+    }} variant="h4">Facility Management</Typography>
+          <Button variant="contained" startIcon={<Add />} onClick={handleAddFacility}  sx={{
+      fontSize: {
+        xs: "0.7rem",
+        sm: "0.8rem",
+        md: "0.9rem",
+        lg: "1rem",
+      },
+      py: {
+        xs: 1,
+        sm: 1.2,
+        md: 1.3,
+      },
+      px: {
+        xs: 2,
+        sm: 3,
+      },
+    }}>
             Add Facility
           </Button>
         </Box>

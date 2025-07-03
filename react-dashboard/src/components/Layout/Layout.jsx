@@ -29,6 +29,7 @@ import {
 } from "@mui/icons-material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTheme } from "../theme-context.js";
 
 const drawerWidth = 240;
 
@@ -41,9 +42,6 @@ const menuItems = [
   { text: "Alerts", icon: Warning, path: "/alerts" },
   { text: "Facilities", icon: Business, path: "/facilities" },
 ];
-
-// Stub for theme context
-const useTheme = () => ({ darkMode: false, toggleTheme: () => {} });
 
 export default function Layout({ children }) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -155,4 +153,4 @@ export default function Layout({ children }) {
       </Box>
     </Box>
   );
-} 
+}

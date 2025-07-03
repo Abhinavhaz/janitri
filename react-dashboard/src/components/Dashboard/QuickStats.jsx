@@ -44,31 +44,60 @@ export default function QuickStats() {
   ];
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} >
       {stats.map((stat, index) => (
-        <Grid item xs={12} sm={6} md={3} key={index}>
-          <Paper
-            sx={{
-              p: 2,
-              display: "flex",
-              alignItems: "center",
-              height: 120,
-            }}
-          >
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="h4" component="div" color={stat.color}>
-                {stat.value}
-              </Typography>
-              <Typography variant="h6" color="text.primary">
-                {stat.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {stat.subtitle}
-              </Typography>
-            </Box>
-            <stat.icon sx={{ fontSize: 48, color: stat.color, opacity: 0.7 }} />
-          </Paper>
-        </Grid>
+       <Grid item xs={12} sm={6} md={3} key={index}>
+       <Paper
+         sx={{
+           p: 2,
+           display: "flex",
+           flexDirection: "row",
+           alignItems: "center",
+           justifyContent: "space-between",
+           height: { xs: 160, sm: 180 }, // Adjusted for small screens
+           width:  { xs: "65vw", md:"100%" }, // Ensure it fills the grid space
+           boxSizing: "border-box",
+         }}
+       >
+         <Box sx={{ flexGrow: 1 }}>
+           <Typography
+             variant="h4"
+             component="div"
+             sx={{
+               fontSize: {
+                 xs: "1.4rem", // mobile
+                 sm: "1.6rem", // tablet
+                 md: "2rem",   // desktop
+               },
+               color: stat.color,
+               fontWeight: 600,
+             }}
+           >
+             {stat.value}
+           </Typography>
+           <Typography
+             variant="h6"
+             sx={{
+               fontSize: { xs: "1rem", sm: "1.2rem" },
+               color: "text.primary",
+             }}
+           >
+             {stat.title}
+           </Typography>
+           <Typography variant="body2" color="text.secondary">
+             {stat.subtitle}
+           </Typography>
+         </Box>
+         <stat.icon
+           sx={{
+             fontSize: { xs: 40, sm: 48 },
+             color: stat.color,
+             opacity: 0.7,
+           }}
+         />
+       </Paper>
+     </Grid>
+     
       ))}
     </Grid>
   );

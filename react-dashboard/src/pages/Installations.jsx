@@ -119,83 +119,158 @@ export default function InstallationsPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
-        <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
-          <Typography variant="h4">Installation & Training</Typography>
-          <Button variant="contained" startIcon={<Add />} onClick={handleAddInstallation}>
-            New Installation
+      <Container  sx={{
+    marginTop: {
+      xs: "-50px",   // for mobile screens
+      sm: "-50px",   // for tablets
+      md: "-200px",  // for desktop and up
+    },
+    width: "100vw",
+  }}>
+        <Box
+  sx={{
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    mb: 3,
+    flexDirection: { xs: "column", sm: "row" }, // stack on mobile
+    gap: 2,
+  }}
+>
+  <Typography
+    sx={{
+      fontSize: {
+        xs: "1.2rem", // small screens
+        sm: "1.5rem", // small-medium
+        md: "1.8rem", // medium
+        lg: "2rem",   // large
+      },
+      fontWeight: 600,
+      textAlign: { xs: "center", sm: "left" },
+    }}
+  >
+    Installation & Training
+  </Typography>
+
+  <Button
+    variant="contained"
+    startIcon={<Add />}
+    onClick={handleAddInstallation}
+    sx={{
+      fontSize: {
+        xs: "0.7rem",
+        sm: "0.8rem",
+        md: "0.9rem",
+        lg: "1rem",
+      },
+      py: {
+        xs: 1,
+        sm: 1.2,
+        md: 1.3,
+      },
+      px: {
+        xs: 2,
+        sm: 3,
+      },
+    }}
+  >
+    New Installation
+  </Button>
+</Box>
+
+
+        <Grid container spacing={3} sx={{ textAlign: "left" }}>
+  {installations.map((installation) => (
+    <Grid item xs={12} md={6} lg={4} key={installation.id}>
+      <Card
+        sx={{
+          height: {
+            xs: 300,
+            sm: 300,
+            md: 300,
+            lg: 320,
+          },
+          width: {
+            xs: "100vw",
+            sm: "100vw",
+            md: "100vw",
+            lg: "20vw",
+          },
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+        }}
+      >
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2, gap: 2 }}>
+            <Typography variant="h6" component="div">
+              {installation.deviceType}
+            </Typography>
+            <Chip label={installation.status} color={getStatusColor(installation.status)} size="small" />
+          </Box>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Facility:</strong> {installation.facilityName}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Engineer:</strong> {installation.engineer}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Date:</strong> {new Date(installation.installationDate).toLocaleDateString()}
+          </Typography>
+
+          <Box sx={{ mt: 2 }}>
+            <Typography variant="body2" gutterBottom>
+              <strong>Progress:</strong>
+            </Typography>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              <Box sx={{ flexGrow: 1, height: 8, backgroundColor: "#e0e0e0", borderRadius: 1 }}>
+                <Box
+                  sx={{
+                    height: "100%",
+                    backgroundColor: installation.status === "Completed" ? "#4caf50" : "#ff9800",
+                    borderRadius: 1,
+                    width: `${
+                      (installation.checklist.filter((item) => item.completed).length /
+                        installation.checklist.length) *
+                      100
+                    }%`,
+                  }}
+                />
+              </Box>
+              <Typography variant="caption">
+                {installation.checklist.filter((item) => item.completed).length}/{installation.checklist.length}
+              </Typography>
+            </Box>
+          </Box>
+
+          {installation.trainingCompleted && (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
+              <CheckCircle color="success" fontSize="small" />
+              <Typography variant="body2" color="success.main">
+                Training Completed
+              </Typography>
+            </Box>
+          )}
+        </CardContent>
+
+        <CardActions>
+          <Button size="small" onClick={() => handleEditInstallation(installation)}>
+            <Edit fontSize="small" />
+            Edit
           </Button>
-        </Box>
+          <Button size="small" color="error" onClick={() => handleDeleteInstallation(installation.id)}>
+            <Delete fontSize="small" />
+            Delete
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
 
-        <Grid container spacing={3}>
-          {installations.map((installation) => (
-            <Grid item xs={12} md={6} lg={4} key={installation.id}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
-                    <Typography variant="h6" component="div">
-                      {installation.deviceType}
-                    </Typography>
-                    <Chip label={installation.status} color={getStatusColor(installation.status)} size="small" />
-                  </Box>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Facility:</strong> {installation.facilityName}
-                  </Typography>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Engineer:</strong> {installation.engineer}
-                  </Typography>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Date:</strong> {new Date(installation.installationDate).toLocaleDateString()}
-                  </Typography>
-
-                  <Box sx={{ mt: 2 }}>
-                    <Typography variant="body2" gutterBottom>
-                      <strong>Progress:</strong>
-                    </Typography>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <Box sx={{ flexGrow: 1, height: 8, backgroundColor: "#e0e0e0", borderRadius: 1 }}>
-                        <Box
-                          sx={{
-                            height: "100%",
-                            backgroundColor: installation.status === "Completed" ? "#4caf50" : "#ff9800",
-                            borderRadius: 1,
-                            width: `${(installation.checklist.filter((item) => item.completed).length / installation.checklist.length) * 100}%`,
-                          }}
-                        />
-                      </Box>
-                      <Typography variant="caption">
-                        {installation.checklist.filter((item) => item.completed).length}/{installation.checklist.length}
-                      </Typography>
-                    </Box>
-                  </Box>
-
-                  {installation.trainingCompleted && (
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1 }}>
-                      <CheckCircle color="success" fontSize="small" />
-                      <Typography variant="body2" color="success.main">
-                        Training Completed
-                      </Typography>
-                    </Box>
-                  )}
-                </CardContent>
-
-                <CardActions>
-                  <Button size="small" onClick={() => handleEditInstallation(installation)}>
-                    <Edit fontSize="small" />
-                    Edit
-                  </Button>
-                  <Button size="small" color="error" onClick={() => handleDeleteInstallation(installation.id)}>
-                    <Delete fontSize="small" />
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
 
         {/* Add/Edit Installation Dialog */}
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="lg" fullWidth>
