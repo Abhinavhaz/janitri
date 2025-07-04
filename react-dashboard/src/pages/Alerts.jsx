@@ -93,10 +93,21 @@ export default function AlertsPage() {
   const handleAddAlert = () => {
     setEditingAlert(null);
     setFormData({
+      deviceId: "",
+      deviceType: "",
+      facilityId: "",
+      facilityName: "",
+      alertType: "",
+      severity: "Low",       // ✅ default severity
+      status: "Open",        // ✅ default status
+      message: "",
+      assignedTo: "",
+      resolutionNotes: "",
       photos: [],
     });
     setDialogOpen(true);
   };
+  
 
   const handleEditAlert = (alert) => {
     setEditingAlert(alert);
@@ -163,11 +174,13 @@ export default function AlertsPage() {
   return (
     <Layout>
       <Container sx={{
-    marginTop: {
-      xs: "-50px",   // for mobile screens
-      sm: "-50px",   // for tablets
-      md: "-200px",  // for desktop and up
-    },
+        
+         top: "10%", // Moves it 50px from the top of the viewport
+         left: "10%",
+         right: 0,
+  
+ 
+    height:"100vh",
     width: "100vw",
   }}>
         <Box
@@ -230,94 +243,122 @@ export default function AlertsPage() {
           </Tabs>
         </Paper>
 
-        <Grid container spacing={3}>
-          {getAlertsForTab().map((alert) => (
-            <Grid item xs={12} md={6} lg={4} key={alert.id}>
-              <Card>
-                <CardContent>
-                  <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", mb: 2 }}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      {getAlertTypeIcon(alert.alertType)}
-                      <Typography variant="h6" component="div">
-                        {alert.alertType}
-                      </Typography>
-                    </Box>
-                    <Chip
-                      label={alert.severity}
-                      color={getSeverityColor(alert.severity)}
-                      size="small"
-                      icon={getSeverityIcon(alert.severity)}
+        <Grid
+  container
+  spacing={1.2}
+  sx={{
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "flex-start", // Or "space-between" or "center" as needed
+  }}
+>
+  {getAlertsForTab().map((alert) => (
+    <Grid item xs={12} sm={6} md={4} key={alert.id}>
+      <Card
+        sx={{
+          height: 300, // Fixed height for all cards
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <CardContent sx={{ flexGrow: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "flex-start",
+              mb: 2,
+              flexWrap: "wrap",
+              gap: 1,
+            }}
+          >
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+              {getAlertTypeIcon(alert.alertType)}
+              <Typography variant="h6" component="div">
+                {alert.alertType}
+              </Typography>
+            </Box>
+            <Chip
+              label={alert.severity}
+              color={getSeverityColor(alert.severity)}
+              size="small"
+              icon={getSeverityIcon(alert.severity)}
+            />
+          </Box>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Device:</strong> {alert.deviceType} ({alert.deviceId})
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Facility:</strong> {alert.facilityName}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Assigned to:</strong> {alert.assignedTo}
+          </Typography>
+
+          <Typography variant="body2" color="text.secondary" gutterBottom>
+            <strong>Created:</strong> {new Date(alert.createdDate).toLocaleDateString()}
+          </Typography>
+
+          <Typography variant="body1" sx={{ mt: 1 }}>
+            {alert.message}
+          </Typography>
+
+          {alert.resolutionNotes && (
+            <Box sx={{ mt: 1, p: 1, backgroundColor: "success.light", borderRadius: 1 }}>
+              <Typography variant="body2" color="success.contrastText">
+                <strong>Resolution:</strong> {alert.resolutionNotes}
+              </Typography>
+            </Box>
+          )}
+
+          {alert.photos.length > 0 && (
+            <Box sx={{ mt: 1 }}>
+              <Typography variant="body2" gutterBottom>
+                <strong>Photos ({alert.photos.length}):</strong>
+              </Typography>
+              <ImageList cols={2} rowHeight={80}>
+                {alert.photos.slice(0, 4).map((photo, index) => (
+                  <ImageListItem key={index}>
+                    <img
+                      src={photo || "/placeholder.svg"}
+                      alt={`Alert photo ${index + 1}`}
+                      loading="lazy"
                     />
-                  </Box>
+                  </ImageListItem>
+                ))}
+              </ImageList>
+            </Box>
+          )}
+        </CardContent>
 
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Device:</strong> {alert.deviceType} ({alert.deviceId})
-                  </Typography>
+        <CardActions sx={{ justifyContent: "flex-end", flexWrap: "wrap" }}>
+          {alert.status === "Open" && (
+            <>
+              <Button size="small" onClick={() => handleAcknowledgeAlert(alert.id)} color="warning">
+                Acknowledge
+              </Button>
+              <Button size="small" onClick={() => handleResolveAlert(alert.id)} color="success">
+                Resolve
+              </Button>
+            </>
+          )}
+          <Button size="small" onClick={() => handleEditAlert(alert)}>
+            <Edit fontSize="small" />
+            Edit
+          </Button>
+          <Button size="small" color="error" onClick={() => handleDeleteAlert(alert.id)}>
+            <Delete fontSize="small" />
+            Delete
+          </Button>
+        </CardActions>
+      </Card>
+    </Grid>
+  ))}
+</Grid>
 
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Facility:</strong> {alert.facilityName}
-                  </Typography>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Assigned to:</strong> {alert.assignedTo}
-                  </Typography>
-
-                  <Typography variant="body2" color="text.secondary" gutterBottom>
-                    <strong>Created:</strong> {new Date(alert.createdDate).toLocaleDateString()}
-                  </Typography>
-
-                  <Typography variant="body1" sx={{ mt: 2 }}>
-                    {alert.message}
-                  </Typography>
-
-                  {alert.resolutionNotes && (
-                    <Box sx={{ mt: 2, p: 1, backgroundColor: "success.light", borderRadius: 1 }}>
-                      <Typography variant="body2" color="success.contrastText">
-                        <strong>Resolution:</strong> {alert.resolutionNotes}
-                      </Typography>
-                    </Box>
-                  )}
-
-                  {alert.photos.length > 0 && (
-                    <Box sx={{ mt: 2 }}>
-                      <Typography variant="body2" gutterBottom>
-                        <strong>Photos ({alert.photos.length}):</strong>
-                      </Typography>
-                      <ImageList cols={2} rowHeight={80}>
-                        {alert.photos.slice(0, 4).map((photo, index) => (
-                          <ImageListItem key={index}>
-                            <img src={photo || "/placeholder.svg"} alt={`Alert photo ${index + 1}`} loading="lazy" />
-                          </ImageListItem>
-                        ))}
-                      </ImageList>
-                    </Box>
-                  )}
-                </CardContent>
-
-                <CardActions>
-                  {alert.status === "Open" && (
-                    <>
-                      <Button size="small" onClick={() => handleAcknowledgeAlert(alert.id)} color="warning">
-                        Acknowledge
-                      </Button>
-                      <Button size="small" onClick={() => handleResolveAlert(alert.id)} color="success">
-                        Resolve
-                      </Button>
-                    </>
-                  )}
-                  <Button size="small" onClick={() => handleEditAlert(alert)}>
-                    <Edit fontSize="small" />
-                    Edit
-                  </Button>
-                  <Button size="small" color="error" onClick={() => handleDeleteAlert(alert.id)}>
-                    <Delete fontSize="small" />
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
 
         {/* Add/Edit Alert Dialog */}
         <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>

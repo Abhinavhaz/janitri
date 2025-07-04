@@ -134,11 +134,16 @@ export default function ContractsPage() {
 
   return (
     <Layout>
-      <Container maxWidth="xl"sx={{ marginTop: {
-      xs: "-100px",   // for mobile screens
-      sm: "-150px",   // for tablets
-      md: "-300px",  // for desktop and up
-    },}}>
+      <Container maxWidth="xl"
+      sx={{
+        top: "10%", // Moves it 50px from the top of the viewport
+        left: "10%",
+        right: 0,
+ 
+
+   height:"100vh",
+  
+    }}>
         <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 3 }}>
           <Typography variant="h4">AMC/CMC Contract Tracker</Typography>
           <Box sx={{ display: "flex", gap: 2 }}>
@@ -198,7 +203,12 @@ export default function ContractsPage() {
                   <TableCell>
                     <Chip label={contract.status} color={getStatusColor(contract.status)} size="small" />
                   </TableCell>
-                  <TableCell>${contract.value.toLocaleString()}</TableCell>
+                  <TableCell>
+  {typeof contract.value === "number"
+    ? `₹${contract.value.toLocaleString("en-IN")}`
+    : "N/A"}
+</TableCell>
+
                   <TableCell>{contract.contactPerson}</TableCell>
                   <TableCell>
                     <IconButton onClick={() => handleEditContract(contract)} size="small">
